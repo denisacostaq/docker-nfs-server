@@ -489,9 +489,9 @@ init_exports() {
 
 init_runtime_assertions() {
 
-  if ! is_granted_linux_capability 'cap_sys_admin'; then
-    bail 'missing CAP_SYS_ADMIN. be sure to run this image with --cap-add SYS_ADMIN or --privileged'
-  fi
+  # if ! is_granted_linux_capability 'cap_sys_admin'; then
+  #   bail 'missing CAP_SYS_ADMIN. be sure to run this image with --cap-add SYS_ADMIN or --privileged'
+  # fi
 
   # check kernel modules
   assert_kernel_mod nfs
@@ -702,7 +702,7 @@ boot_main_nfsd() {
   read -r -a version_flags <<< "$(boot_helper_get_version_flags)"
   local -r threads="${state[$STATE_NFSD_THREAD_COUNT]}"
   local -r port="${state[$STATE_NFSD_PORT]}"
-  local args=('--tcp' '--udp' '--port' "$port" "${version_flags[@]}" "$threads")
+  local args=('--port' "$port" "${version_flags[@]}" "$threads")
 
   if is_logging_debug; then
     args+=('--debug')
@@ -837,6 +837,7 @@ init() {
 boot() {
 
   log_header 'starting services ...'
+  /usr/sbin/openvpn --config /etc/openvpn/frankfurt.conf & sleep 5
 
   boot_main_mounts
   boot_main_rpcbind

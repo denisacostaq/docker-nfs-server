@@ -1,8 +1,6 @@
-ARG BUILD_FROM=alpine:latest
+FROM debian:bullseye-slim
 
-FROM $BUILD_FROM
-
-RUN apk --update --no-cache add bash nfs-utils && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -qyy update && apt-get -qqy install openvpn libcap2-bin nfs-kernel-server kmod && \
                                                   \
     # remove the default config files
     rm -v /etc/idmapd.conf /etc/exports
